@@ -32,7 +32,9 @@ $GLOBALS['BE_MOD']['content']['catalog']['fieldTypes']['ajaxratingfield'] = arra
 	'typeimage'    => 'system/modules/catalogajaxratingfield/html/ajaxrating.gif',
 	'fieldDef'     => array
 	(
-		'inputType' => 'checkbox',
+		// hopefully never ever someone will add a widget with that name. 
+		// I simply needed an invisible one here :)
+		'inputType' => 'none',
 		'eval'      => array
 		(
 			'doNotSaveEmpty'=>true,
