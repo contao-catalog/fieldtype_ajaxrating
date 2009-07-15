@@ -95,7 +95,7 @@ class CatalogAjaxRatingField extends Backend {
 		return round($sum/$votecount, 2);
 	}
 
-	public function parseValue($id, $k, $raw, $blnImageLink, $objCatalog)
+	public function parseValue($id, $k, $raw, $blnImageLink, $objCatalog, $objCatalogInstance)
 	{
 		// we have to determine the vote count and if the current user is allowed to cast a vote.
 		$objVotes=$this->Database->prepare("SELECT *, COUNT(*) AS totalVotes, SUM(value) AS sumValue FROM tl_catalog_rating WHERE cat_id=? AND item_id=? GROUP BY cat_id, item_id")
@@ -115,6 +115,8 @@ class CatalogAjaxRatingField extends Backend {
 			$value=0;
 			$hasVoted=false;
 		}
+		// disable voting at all for everything except for ModuleCatalogReader
+		$hasVoted= $hasVoted || (!($objCatalogInstance instanceof ModuleCatalogReader));
 
 		// Catch voting!
 		if (($this->Input->get('q') == 'rating') && ($objCatalog->pid==$this->Input->get('ratecat')) && ($objCatalog->id==$this->Input->get('rateitem')))
