@@ -25,7 +25,7 @@ class CatalogAjaxRatingWidget extends Widget
 {
 	protected $strTemplate = 'form_widget';
 	
-	private $intRatingUnitWidth = 30;
+	protected $intRatingUnitWidth = 30;
 	
 	
 	public function validate()
@@ -151,6 +151,8 @@ class CatalogAjaxRatingField extends Backend {
 			}
 		}
 
+		$objWidth=$this->Database->prepare("SELECT ajaxratingfield FROM tl_catalog_fields WHERE pid=? AND colName=?")
+							->execute($objCatalog->pid, $k);
 		$ajaxWidget = new CatalogAjaxRatingWidget(array
 										 (
 										  'value'=>$value,
@@ -159,7 +161,8 @@ class CatalogAjaxRatingField extends Backend {
 										  'catId' => $objCatalog->pid,
 										  'itemId' => $objCatalog->id,
 										  'voted' => $hasVoted,
-										  'tableless'	=> true, 
+										  'tableless'	=> true,
+										  'intRatingUnitWidth' => $objWidth->ajaxratingfield,
 										  ));
 		$html = $ajaxWidget->parse();
 		return array

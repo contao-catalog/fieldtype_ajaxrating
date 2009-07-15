@@ -28,9 +28,17 @@
  */
 
 // Palettes
-$GLOBALS['TL_DCA']['tl_catalog_fields']['palettes']['ajaxratingfield'] = 'name,description,colName,type';
+$GLOBALS['TL_DCA']['tl_catalog_fields']['palettes']['ajaxratingfield'] = 'name,description,colName,type,ajaxratingfield';
 
-// register to catalog module that we provide the multitextwizard as field type.
+// register our fieldtype editor to the catalog Fields
+$GLOBALS['TL_DCA']['tl_catalog_fields']['fields']['ajaxratingfield'] = array
+(
+	'label'         => &$GLOBALS['TL_LANG']['tl_catalog_fields']['ajaxRatingUnitWidth'],
+	'inputType'               => 'text',
+	'eval'                    => array('multiple'=>false, 'size'=>2, 'rgxp'=>'digit', 'nospace'=>true),
+);
+
+// register to catalog module that we provide the ajaxratingfield as field type.
 $GLOBALS['TL_DCA']['tl_catalog_fields']['fields']['type']['options'][] = 'ajaxratingfield';
 
 ?>

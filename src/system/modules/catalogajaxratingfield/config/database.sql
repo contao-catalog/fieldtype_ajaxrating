@@ -10,6 +10,10 @@
 
 -- --------------------------------------------------------
 
+CREATE TABLE `tl_catalog_fields` (
+  `ajaxratingfield` int(10) unsigned NOT NULL default '30'
+) TYPE=MyISAM;
+
 --
 -- Table `tl_catalog_rating`
 -- 
