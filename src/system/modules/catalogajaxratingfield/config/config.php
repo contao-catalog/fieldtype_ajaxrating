@@ -29,7 +29,7 @@
 // Register field type editor to catalog module.
 $GLOBALS['BE_MOD']['content']['catalog']['fieldTypes']['ajaxratingfield'] = array
 (
-	'typeimage'    => 'system/modules/catalogajaxratingfield/html/ajaxrating.gif',
+	'typeimage'    => 'system/modules/catalogajaxratingfield/html/ratingfield.gif',
 	'fieldDef'     => array
 	(
 		// hopefully never ever someone will add a widget with that name. 
