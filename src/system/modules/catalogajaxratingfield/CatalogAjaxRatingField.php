@@ -45,43 +45,40 @@ class CatalogAjaxRatingWidget extends Widget
 		
 		
 		$return  = '<div class="ratingblock">';
-		$return .= '<div id="unit_long'.$this->strId.'">';
-		$return .= '<ul id="unit_ul'.$this->strId.'" class="unit-rating" style="width:'.$this->intRatingUnitWidth*$this->size.'px;">';
+		$return .= '<div '.(($this->strId != '') ? 'id="unit_long'.$this->strId.'"' :''). '>';
+		$return .= '<ul '.(($this->strId != '') ? 'id="unit_ul'.$this->strId.'"' :''). ' class="unit-rating" style="width:'.$this->intRatingUnitWidth*$this->size.'px;">';
 		$return .= '<li class="current-rating" style="width:'.$intRatingWidth.'px;" title="'.sprintf($GLOBALS['TL_LANG']['catalogajaxratingfield']['votevalue'], $this->value, $this->size). '">'.sprintf($GLOBALS['TL_LANG']['catalogajaxratingfield']['votevalue'], $this->value, $this->size). '</li>';
 		
-		if (!$this->voted)
+		if ((!$this->voted) && ($this->strId != ''))
 		{
 			for( $i=1; $i<=$this->size; $i++)
 			{
-				$return .= '<li class="rater"><a href="'. $strUrl .'q=rating&amp;ratecat='.$this->catId.'&amp;rateitem='.$this->itemId.'&amp;value='.$i.'" title="'.sprintf($GLOBALS['TL_LANG']['catalogajaxratingfield']['votewithvalue'], $i, $this->size).'" class="r'.$i.'-unit rater" rel="nofollow" onclick="return false">'.$i.'</a></li>';
+				$return .= '<li class="rater"><a rel="nofollow" href="'. $strUrl .'q=rating&amp;ratecat='.$this->catId.'&amp;rateitem='.$this->itemId.'&amp;value='.$i.'" title="'.sprintf($GLOBALS['TL_LANG']['catalogajaxratingfield']['votewithvalue'], $i, $this->size).'" class="r'.$i.'-unit rater" rel="nofollow" onclick="return false">'.$i.'</a></li>';
 			}
+			$GLOBALS['TL_HEAD']['rating']="
+<script type=\"text/javascript\">
+	//<![CDATA[
+		window.addEvent('domready', function() {
+			$$('#unit_ul" . $this->strId . " a.rater').addEvent('click', function() {
+				url=this.href + '&amp;isAjax=1';
+				new Request({
+					url: url,
+					onComplete: function(txt, xml) {
+						var text='".sprintf($GLOBALS['TL_LANG']['catalogajaxratingfield']['votevalue'], 'xxx', $this->size)."';
+						text=text.replace( /xxx/, txt);
+						var html='<li class=\"current-rating\" style=\"width:' + (txt * " . $this->intRatingUnitWidth . ") + 'px;\" title=' + text + '>' + text + '<\/li>'
+						$('unit_ul" . $this->strId . "').set('html', html);
+					}
+				}).send();
+				$('unit_ul" . $this->strId . "').set('html', '<div class=\"loading\"><\/div>');
+			});
+		});
+	//]]>
+</script>
+";
 		}
 		
 		$return .= '</ul></div></div>';
-		
-		$return .= "
-		<script type=\"text/javascript\">
-//<![CDATA[
-			window.addEvent('domready', function() {
-				$$('#unit_ul" . $this->strId . " a.rater').addEvent('click', function() {
-					url=this.href + '&amp;isAjax=1';
-					new Request({
-						url: url,
-						onComplete: function(txt, xml) {
-							var text='".sprintf($GLOBALS['TL_LANG']['catalogajaxratingfield']['votevalue'], 'xxx', $this->size)."';
-							text=text.replace( /xxx/, txt);
-							var html='<li class=\"current-rating\" style=\"width:' + (txt * " . $this->intRatingUnitWidth . ") + 'px;\" title=' + text + '>' + text + '<\/li>'
-							$('unit_ul" . $this->strId . "').set('html', html);
-						}
-					}).send();
-					$('unit_ul" . $this->strId . "').set('html', '<div class=\"loading\"><\/div>');
-					
-				});
-				
-			});
-//]]>
-	</script>
-		";
 		
 		return $return;
 	}
@@ -157,7 +154,7 @@ class CatalogAjaxRatingField extends Backend {
 										 (
 										  'value'=>$value,
 										  'size' => 5,
-										  'strId' => $objCatalog->pid . '_' . $objCatalog->id,
+										  'strId' => (($objCatalogInstance instanceof ModuleCatalogReader) ? $objCatalog->pid . '_' . $objCatalog->id : ''),
 										  'catId' => $objCatalog->pid,
 										  'itemId' => $objCatalog->id,
 										  'voted' => $hasVoted,
