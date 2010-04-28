@@ -24,4 +24,5 @@
 
 $GLOBALS['TL_LANG']['catalogajaxratingfield']['votevalue'] = '%s out of %s';
 $GLOBALS['TL_LANG']['catalogajaxratingfield']['votewithvalue'] = 'rate as %s out of %s';
+$GLOBALS['TL_LANG']['catalogajaxratingfield']['vote'] = 'Vote';
 ?>

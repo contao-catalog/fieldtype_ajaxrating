@@ -22,6 +22,7 @@
  */
 
 
-$GLOBALS['TL_LANG']['catalogajaxratingfield']['votevalue'] = '%s von %s';
-$GLOBALS['TL_LANG']['catalogajaxratingfield']['votewithvalue'] = 'mit %s von %s bewerten';
+$GLOBALS['TL_LANG']['catalogajaxratingfield']['votevalue'] = 'Durchschnittlich bewertet mit %s von %s';
+$GLOBALS['TL_LANG']['catalogajaxratingfield']['votewithvalue'] = 'Mit %s von %s möglichen Punkten bewerten';
+$GLOBALS['TL_LANG']['catalogajaxratingfield']['vote'] = 'Bewerten';
 ?>

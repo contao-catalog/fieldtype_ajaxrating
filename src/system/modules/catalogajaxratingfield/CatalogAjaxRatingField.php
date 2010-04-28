@@ -51,22 +51,30 @@ class CatalogAjaxRatingWidget extends Widget
 		
 		if ((!$this->voted) && ($this->strId != ''))
 		{
+			$rateitems='';
+			$rateform='<form id="rateform_'.$this->strId.'" action="'. $strUrl .'" method="get"><div><input type="hidden" name="q" value="rating" /><input type="hidden" name="ratecat" value="'.$this->catId.'" /><input type="hidden" name="rateitem" value="'.$this->itemId.'" />';
 			for( $i=1; $i<=$this->size; $i++)
 			{
-				$return .= '<li class="rater"><a rel="nofollow" href="'. $strUrl .'q=rating&amp;ratecat='.$this->catId.'&amp;rateitem='.$this->itemId.'&amp;value='.$i.'" title="'.sprintf($GLOBALS['TL_LANG']['catalogajaxratingfield']['votewithvalue'], $i, $this->size).'" class="r'.$i.'-unit rater" rel="nofollow" onclick="return false">'.$i.'</a></li>';
+				$rateitems .= '<li class="rater"><a rel="nofollow" href="'. $strUrl .'q=rating&amp;ratecat='.$this->catId.'&amp;rateitem='.$this->itemId.'&amp;value='.$i.'" title="'.sprintf($GLOBALS['TL_LANG']['catalogajaxratingfield']['votewithvalue'], $i, $this->size).'" class="r'.$i.'-unit rater" rel="nofollow" onclick="return false">'.$i.'<\/a><\/li>';
+				$rateform .='<input type="radio" name="value" value="'.$i.'" id="vote_'.$this->strId.$i.'" /><label for="vote_'.$this->strId.$i.'" >'.sprintf($GLOBALS['TL_LANG']['catalogajaxratingfield']['votewithvalue'], $i, $this->size).'</label>';
 			}
+			$rateform.='<input type="submit" value="'.$GLOBALS['TL_LANG']['catalogajaxratingfield']['vote'].'" /></div></form>';
 			$GLOBALS['TL_HEAD']['rating']="
 <script type=\"text/javascript\">
 	//<![CDATA[
 		window.addEvent('domready', function() {
+			$('rateform_" . $this->strId . "').dispose();
+			var temp=new Element('div');
+			temp.set('html','".$rateitems."');
+			$('unit_ul" . $this->strId . "').adopt(temp.childNodes);
 			$$('#unit_ul" . $this->strId . " a.rater').addEvent('click', function() {
-				url=this.href + '&amp;isAjax=1';
+				url=this.href + '&isAjax=1';
 				new Request({
 					url: url,
 					onComplete: function(txt, xml) {
 						var text='".sprintf($GLOBALS['TL_LANG']['catalogajaxratingfield']['votevalue'], 'xxx', $this->size)."';
 						text=text.replace( /xxx/, txt);
-						var html='<li class=\"current-rating\" style=\"width:' + (txt * " . $this->intRatingUnitWidth . ") + 'px;\" title=' + text + '>' + text + '<\/li>'
+						var html='<li class=\"current-rating\" style=\"width:' + (txt * " . $this->intRatingUnitWidth . ") + 'px;\" title=\"' + text + '\">' + text + '<\/li>'
 						$('unit_ul" . $this->strId . "').set('html', html);
 					}
 				}).send();
@@ -77,9 +85,7 @@ class CatalogAjaxRatingWidget extends Widget
 </script>
 ";
 		}
-		
-		$return .= '</ul></div></div>';
-		
+		$return .= '</ul>'.$rateform .'</div></div>';
 		return $return;
 	}
 }
@@ -118,7 +124,8 @@ class CatalogAjaxRatingField extends Backend {
 		// Catch voting!
 		if (($this->Input->get('q') == 'rating') && ($objCatalog->pid==$this->Input->get('ratecat')) && ($objCatalog->id==$this->Input->get('rateitem')))
 		{
-			if (!$hasVoted) {
+			if (!$hasVoted)
+			{
 				$this->Database->prepare("INSERT INTO tl_catalog_rating (cat_id, item_id, value, ip, time) VALUES (?, ?, ?, ?, ?)")
 							   ->execute($objCatalog->pid, $objCatalog->id, $this->Input->get('value'), $_SERVER['REMOTE_ADDR'], time()); 
 							   // Would love to use $this->Environment->ip here but this is the internal IP of an network if behind NAT, therefore useless.
@@ -144,7 +151,7 @@ class CatalogAjaxRatingField extends Backend {
 			}
 			else
 			{
-				$this->redirect(preg_replace('@(\?|&)q=[^&]*&j=[^&]@', '', $this->Environment->request));
+				$this->redirect(preg_replace('@(\?|&)q=[^&]*&ratecat=[^&]*&rateitem=[^&]*&value=[^&]*@', '', $this->Environment->request));
 			}
 		}
 
