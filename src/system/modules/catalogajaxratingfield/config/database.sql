@@ -32,4 +32,4 @@ CREATE TABLE `tl_catalog_rating` (
 -- time when this vote was casted
   `time` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
