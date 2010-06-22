@@ -12,7 +12,7 @@
 
 CREATE TABLE `tl_catalog_fields` (
   `ajaxratingfield` int(10) unsigned NOT NULL default '30'
-) TYPE=MyISAM;
+) TYPE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Table `tl_catalog_rating`
