@@ -25,4 +25,9 @@
 $GLOBALS['TL_LANG']['catalogajaxratingfield']['votevalue'] = '%s out of %s';
 $GLOBALS['TL_LANG']['catalogajaxratingfield']['votewithvalue'] = 'rate as %s out of %s';
 $GLOBALS['TL_LANG']['catalogajaxratingfield']['vote'] = 'Vote';
+
+// labels for sorting.
+$GLOBALS['TL_LANG']['MSC']['ajaxratingfieldasc']  = '(by rating ascending)';
+$GLOBALS['TL_LANG']['MSC']['ajaxratingfielddesc'] = '(by rating descending)';
+
 ?>
