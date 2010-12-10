@@ -146,7 +146,7 @@ class CatalogAjaxRatingField extends Backend {
 				$objVotes=$this->Database->prepare("SELECT *, COUNT(*) AS totalVotes, SUM(value) AS sumValue FROM tl_catalog_rating WHERE cat_id=? AND item_id=? GROUP BY cat_id, item_id")
 							->execute($objCatalog->pid, $objCatalog->id);
 				$objVotes->next();
-				echo round($objVotes->sumValue/$objVotes->totalVotes, 2);
+				echo $objVotes->totalVotes?round($objVotes->sumValue/$objVotes->totalVotes, 2):$objVotes->sumValue;
 				exit;
 			}
 			else
